@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -13,47 +13,38 @@ export default function HeroSection() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Initialize audio on mount
   useEffect(() => {
-    // Create audio element for ambient music (can be replaced with actual audio file)
-    audioRef.current = new Audio();
-    // audioRef.current.src = "/ambient-music.mp3"; // Add your audio file here
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  const toggleSound = () => {
-    if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.play().catch(() => {
-          // Autoplay blocked, user needs to interact first
-          console.log("Audio playback requires user interaction");
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+      if (!isMuted) {
+        videoRef.current.play().catch((e) => {
+          console.log("Audio playback requires user interaction", e);
         });
-      } else {
-        audioRef.current.pause();
       }
     }
+  }, [isMuted]);
+
+  const toggleSound = () => {
     setIsMuted(!isMuted);
   };
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{
-        backgroundImage: `url('https://ext.same-assets.com/251171254/183738000.webp')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#050506]"
     >
+      {/* Background Video */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        playsInline
+        muted={isMuted}
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/interstellar-bg.mp4" type="video/mp4" />
+      </video>
+
       {/* Overlay with enhanced gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-[#050506]" />
 

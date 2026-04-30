@@ -120,8 +120,8 @@ export default function ProjectsSection() {
         {/* Section header */}
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h2 className="font-orbitron text-4xl md:text-5xl font-bold tracking-wider mb-4">
-            <span className="text-white">GALAX</span>
-            <span className="text-violet-400">IES</span>
+            <span className="text-white">PROJE</span>
+            <span className="text-violet-400">CTS</span>
           </h2>
           <p className="text-xs tracking-cosmic uppercase text-gray-500">
             Selected Projects — Each One a World of Its Own
