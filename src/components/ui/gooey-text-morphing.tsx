@@ -26,15 +26,18 @@ export function GooeyText({
     let time = new Date();
     let morph = 0;
     let cooldown = cooldownTime;
+    let animFrameId: number;
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        // Guard against division by zero which freezes the blur
+        const blur2 = fraction > 0 ? Math.min(8 / fraction - 8, 100) : 100;
+        const blur1 = fraction < 1 ? Math.min(8 / (1 - fraction) - 8, 100) : 100;
 
-        fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text2Ref.current.style.filter = `blur(${blur2}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text1Ref.current.style.filter = `blur(${blur1}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(1 - fraction, 0.4) * 100}%`;
       }
     };
 
@@ -61,8 +64,8 @@ export function GooeyText({
       setMorph(fraction);
     };
 
-    function animate() {
-      requestAnimationFrame(animate);
+    const animate = () => {
+      animFrameId = requestAnimationFrame(animate);
       const newTime = new Date();
       const shouldIncrementIndex = cooldown > 0;
       const dt = (newTime.getTime() - time.getTime()) / 1000;
@@ -82,12 +85,13 @@ export function GooeyText({
       } else {
         doCooldown();
       }
-    }
+    };
 
     animate();
 
+    // Properly cancel the animation loop on unmount
     return () => {
-      // Cleanup function if needed
+      cancelAnimationFrame(animFrameId);
     };
   }, [texts, morphTime, cooldownTime]);
 
