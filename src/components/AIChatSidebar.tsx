@@ -23,7 +23,7 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // AI Session ref
-  const aiSessionRef = useRef<any>(null);
+  const aiSessionRef = useRef<unknown>(null);
 
   // Fetch KNOWLEDGEBASE.md on mount
   useEffect(() => {
@@ -63,9 +63,9 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
 
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("AI Prompt Error:", error);
-      setErrorMsg("Error: " + error.message + " Make sure the FastAPI backend is running on port 8000.");
+      setErrorMsg("Error: " + (error instanceof Error ? error.message : String(error)) + " Make sure the FastAPI backend is running on port 8000.");
     } finally {
       setIsLoading(false);
     }
