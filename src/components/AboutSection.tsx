@@ -35,7 +35,7 @@ export default function AboutSection() {
         {/* Portrait placeholder */}
         <div className={`flex justify-center mb-8 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className="relative">
-            <div className="w-40 h-40 md:w-48 md:h-48 rounded-lg border border-violet-500/30 overflow-hidden bg-gradient-to-br from-violet-900/20 to-blue-900/20 flex items-center justify-center relative">
+            <div className="w-80 h-80 md:w-96 md:h-96 rounded-lg border border-violet-500/30 overflow-hidden bg-gradient-to-br from-violet-900/20 to-blue-900/20 flex items-center justify-center relative">
               <Image 
                 src="/PDP.png" 
                 alt="Tlili Soulaymen Profile Picture" 

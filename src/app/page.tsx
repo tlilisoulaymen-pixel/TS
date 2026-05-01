@@ -5,9 +5,8 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import SkillsSection from "@/components/SkillsSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
 import StarsBackground from "@/components/StarsBackground";
+import { CinematicFooter } from "@/components/ui/motion-footer";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -25,8 +24,7 @@ export default function Home() {
       <AboutSection />
       <ProjectsSection />
       <SkillsSection />
-      <ContactSection />
-      <Footer />
+      <CinematicFooter />
     </main>
   );
 }
