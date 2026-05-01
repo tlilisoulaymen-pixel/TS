@@ -340,11 +340,11 @@ export function CinematicFooter() {
 
             {/* Logo & Copyright */}
             <div className="flex flex-col md:flex-row items-center gap-4 order-2 md:order-1">
-              <Link href="/" aria-label="Go to profile top">
+              <Link href="/" aria-label="Go to profile top" className="group">
                 <img 
                   src="/ts-logo.png" 
                   alt="TS Logo" 
-                  className="h-10 w-auto hover:opacity-80 transition-opacity" 
+                  className="h-28 w-28 md:h-32 md:w-32 object-contain bg-white p-2 rounded-xl group-hover:scale-105 transition-transform shadow-lg shadow-violet-500/20" 
                 />
               </Link>
               <p className="text-gray-600 text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left">
