@@ -337,10 +337,19 @@ export function CinematicFooter() {
           {/* BOTTOM BAR */}
           <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
 
-            {/* Copyright */}
-            <p className="text-gray-600 text-[10px] md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
-              © {new Date().getFullYear()} Tlili Soulaymen. All rights reserved.
-            </p>
+            {/* Logo & Copyright */}
+            <div className="flex flex-col md:flex-row items-center gap-4 order-2 md:order-1">
+              <a href="/" aria-label="Go to profile top">
+                <img 
+                  src="/ts-logo.png" 
+                  alt="TS Logo" 
+                  className="h-10 w-auto hover:opacity-80 transition-opacity" 
+                />
+              </a>
+              <p className="text-gray-600 text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left">
+                © {new Date().getFullYear()} Tlili Soulaymen. All rights reserved.
+              </p>
+            </div>
 
             {/* Crafted with badge */}
             <div className="footer-glass-pill px-5 py-2.5 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default">
