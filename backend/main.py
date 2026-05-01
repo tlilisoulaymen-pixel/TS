@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
+from pathlib import Path
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
@@ -23,8 +24,10 @@ class ChatRequest(BaseModel):
     message: str
 
 # Load Knowledge Base
+# Resolve path relative to this file so it works on any server
+_ROOT = Path(__file__).parent.parent
 try:
-    with open("../public/KNOWLEDGEBASE.md", "r", encoding="utf-8") as f:
+    with open(_ROOT / "public" / "KNOWLEDGEBASE.md", "r", encoding="utf-8") as f:
         knowledge_base = f.read()
 except FileNotFoundError:
     knowledge_base = "No KNOWLEDGEBASE.md found."
