@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -339,13 +340,13 @@ export function CinematicFooter() {
 
             {/* Logo & Copyright */}
             <div className="flex flex-col md:flex-row items-center gap-4 order-2 md:order-1">
-              <a href="/" aria-label="Go to profile top">
+              <Link href="/" aria-label="Go to profile top">
                 <img 
                   src="/ts-logo.png" 
                   alt="TS Logo" 
                   className="h-10 w-auto hover:opacity-80 transition-opacity" 
                 />
-              </a>
+              </Link>
               <p className="text-gray-600 text-[10px] md:text-xs font-semibold tracking-widest uppercase text-center md:text-left">
                 © {new Date().getFullYear()} Tlili Soulaymen. All rights reserved.
               </p>
