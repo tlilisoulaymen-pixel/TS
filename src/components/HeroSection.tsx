@@ -5,7 +5,7 @@ import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
