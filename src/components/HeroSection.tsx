@@ -5,7 +5,7 @@ import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -40,6 +40,7 @@ export default function HeroSection() {
         autoPlay
         loop
         playsInline
+        preload="auto"
         muted={isMuted}
         className="absolute inset-0 w-full h-full object-cover"
       >
