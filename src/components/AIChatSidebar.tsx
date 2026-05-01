@@ -50,10 +50,8 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
     setErrorMsg("");
 
     try {
-      // Auto-detect environment: use Render URL in production, localhost in local dev
-      const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
-      const defaultUrl = isLocalhost ? "http://localhost:8000" : "https://ts-f3lk.onrender.com";
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultUrl;
+      // Hardcode production URL to eliminate any port 8000 fallback errors
+      const apiUrl = "https://ts-f3lk.onrender.com";
       
       const res = await fetch(`${apiUrl}/chat`, {
         method: "POST",
@@ -69,9 +67,7 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
       setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
     } catch (error: unknown) {
       console.error("AI Prompt Error:", error);
-      const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
-      const hint = isLocalhost ? "Make sure the FastAPI backend is running on port 8000." : "Make sure your Render backend is live and configured.";
-      setErrorMsg("Error: " + (error instanceof Error ? error.message : String(error)) + " " + hint);
+      setErrorMsg("Error: " + (error instanceof Error ? error.message : String(error)) + " Make sure your Render backend is live and configured.");
     } finally {
       setIsLoading(false);
     }
