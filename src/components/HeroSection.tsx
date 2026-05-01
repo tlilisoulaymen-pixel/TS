@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
@@ -78,11 +79,14 @@ export default function HeroSection() {
         </div>
 
         {/* Name - Large stylized */}
-        <h1 className="font-orbitron text-6xl md:text-8xl lg:text-9xl font-bold mb-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          <span className="text-violet-400">T</span>
-          <span className="text-white">S</span>
-          <span className="text-violet-300/60 text-4xl md:text-6xl lg:text-7xl ml-2 align-top">dev</span>
-        </h1>
+        <div className="h-[120px] md:h-[200px] flex items-center justify-center mb-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+          <GooeyText
+            texts={["TS dev", "ENGINEER", "BUILDER", "CREATOR"]}
+            morphTime={1}
+            cooldownTime={0.5}
+            textClassName="font-orbitron font-bold text-violet-400 text-6xl md:text-8xl lg:text-9xl"
+          />
+        </div>
 
         {/* Tagline */}
         <div className="space-y-2 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>

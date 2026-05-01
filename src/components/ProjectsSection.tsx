@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AIChatSidebar from "./AIChatSidebar";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 const projects = [
   {
@@ -92,6 +94,7 @@ const tagColors: Record<string, string> = {
 export default function ProjectsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -119,10 +122,14 @@ export default function ProjectsSection() {
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <h2 className="font-orbitron text-4xl md:text-5xl font-bold tracking-wider mb-4">
-            <span className="text-white">PROJE</span>
-            <span className="text-violet-400">CTS</span>
-          </h2>
+          <div className="h-[100px] flex items-center justify-center mb-4">
+            <GooeyText
+              texts={["PROJECTS", "GALAXIES", "MISSIONS", "WORKS"]}
+              morphTime={1}
+              cooldownTime={1.5}
+              textClassName="font-orbitron text-4xl md:text-5xl font-bold text-white drop-shadow-[0_0_15px_rgba(139,92,246,0.8)] tracking-wider"
+            />
+          </div>
           <p className="text-xs tracking-cosmic uppercase text-gray-500">
             Selected Projects — Each One a World of Its Own
           </p>
@@ -198,7 +205,28 @@ export default function ProjectsSection() {
             <span className="font-orbitron text-sm tracking-wider text-white">Explore All Repositories</span>
           </a>
         </div>
+        {/* Ask AI CTA */}
+        <div className={`fixed bottom-8 right-8 z-30 transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-90 pointer-events-none"}`}>
+          <button
+            onClick={() => setIsAIChatOpen(true)}
+            className="flex items-center gap-3 px-6 py-4 rounded-full border border-violet-500/50 bg-black/80 backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] hover:border-violet-400 hover:scale-105 transition-all group"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-600 to-blue-500 flex items-center justify-center group-hover:animate-pulse">
+              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <span className="font-orbitron tracking-wider text-sm text-white group-hover:text-violet-300 transition-colors">Ask AI About Me</span>
+          </button>
+        </div>
+
       </div>
+
+      {/* AI Chat Sidebar */}
+      <AIChatSidebar 
+        isOpen={isAIChatOpen} 
+        onClose={() => setIsAIChatOpen(false)} 
+      />
     </section>
   );
 }

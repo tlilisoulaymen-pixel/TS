@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -137,7 +138,14 @@ export default function AboutSection() {
 
         {/* Education Timeline */}
         <div className={`mt-20 transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <h3 className="font-orbitron text-xl text-center text-violet-400 mb-10 tracking-wider">Education</h3>
+          <div className="h-[60px] md:h-[80px] flex items-center justify-center mb-10">
+            <GooeyText
+              texts={["EDUCATION", "BACKGROUND", "ACADEMICS"]}
+              morphTime={1}
+              cooldownTime={1.5}
+              textClassName="font-orbitron text-xl md:text-3xl font-bold text-violet-400 tracking-wider"
+            />
+          </div>
 
           <div className="space-y-8">
             {/* ENSTA */}
