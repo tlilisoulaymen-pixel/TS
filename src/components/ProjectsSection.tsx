@@ -3,77 +3,63 @@
 import { useEffect, useRef, useState } from "react";
 import AIChatSidebar from "./AIChatSidebar";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
+import StellarProjectGallery, { Project } from "@/components/ui/3d-image-gallery";
 
-const projects = [
+const projects: Project[] = [
   {
-    id: 1,
+    id: "1",
     title: "AI-Powered Web & Mobile Apps",
     status: "Active",
     description: "Designed and delivered a wide spectrum of web and mobile applications integrating cutting-edge AI technologies — LangChain, RAG, OCR — with diverse stacks (Next.js, React Native, FastAPI, Supabase, Vercel) for academic institutions and private enterprises.",
-    highlights: [
-      "Certified Upwork freelancer — end-to-end solutions for international clients",
-      "From MVPs to production systems",
-      "Integration of LLMs, embeddings, and orchestration pipelines"
-    ],
     tags: ["Next.js", "React Native", "FastAPI", "LangChain", "RAG"],
-    color: "violet",
-    link: "https://github.com/souladev"
+    color: "#8b5cf6", // violet
+    link: "https://github.com/souladev",
+    imageUrl: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
+    alt: "AI Apps"
   },
   {
-    id: 2,
+    id: "2",
     title: "Financial Engineering & Algorithmic Trading",
     status: "Active",
     description: "Designed and deployed 14+ algorithmic trading bots on equity and forex markets, integrating multi-level strategies focused on performance and risk management.",
-    highlights: [
-      "Advanced metrics: PnL, Sharpe ratio, max drawdown, win rate, Calmar ratio, VaR",
-      "Cross-strategy correlation analysis",
-      "Statistical risk modeling and rigorous backtesting"
-    ],
     tags: ["Python", "Statistics", "Risk Analysis", "Trading"],
-    color: "blue",
-    link: "https://github.com/souladev"
+    color: "#3b82f6", // blue
+    link: "https://github.com/souladev",
+    imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+    alt: "Trading"
   },
   {
-    id: 3,
+    id: "3",
     title: "Systems Architecture & Vulnerability Analysis",
     status: "Completed",
     description: "Conducted end-to-end system architecture audits, identifying critical vulnerabilities in data flows — with focus on type safety, serialization boundaries, implicit state mutations, and inter-service contracts.",
-    highlights: [
-      "Proposed and implemented architectural refactors",
-      "Eliminated failure points from type inconsistencies",
-      "Controlled data propagation patterns"
-    ],
     tags: ["Architecture", "Security", "TypeScript", "Metasploit"],
-    color: "emerald",
-    link: "https://github.com/souladev"
+    color: "#10b981", // emerald
+    link: "https://github.com/souladev",
+    imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+    alt: "Systems"
   },
   {
-    id: 4,
+    id: "4",
     title: "AMKA — Adaptive Multi-Kangaroo Algorithm",
     status: "Research",
     description: "Novel optimization algorithm for discrete logarithm problems. Reduced time complexity from O(n²) to O(n²/m) through parallel kangaroo walks.",
-    highlights: [
-      "Dynamic trajectory optimization with adaptive step sizes",
-      "Significantly accelerates cryptanalysis",
-      "Cryptographic robustness evaluation"
-    ],
     tags: ["Cryptography", "Algorithms", "Python", "Mathematics"],
-    color: "amber",
-    link: "https://github.com/souladev"
+    color: "#f59e0b", // amber
+    link: "https://github.com/souladev",
+    imageUrl: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80",
+    alt: "Algorithms"
   },
   {
-    id: 5,
+    id: "5",
     title: "Blockchain & Web3 Ecosystem",
     status: "Active",
     description: "Developed and deployed smart contracts and DApps on EVM-compatible chains (Ethereum, Polygon), with contract security audits.",
-    highlights: [
-      "Flash loan arbitrage strategies",
-      "End-to-end decentralized Web3 protocol integration",
-      "Full Web3 stack: Solidity, Hardhat, ethers.js, IPFS, multi-chain deployment"
-    ],
     tags: ["Solidity", "Hardhat", "Ethereum", "Web3"],
-    color: "cyan",
-    link: "https://github.com/souladev"
+    color: "#06b6d4", // cyan
+    link: "https://github.com/souladev",
+    imageUrl: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
+    alt: "Blockchain"
   }
 ];
 
@@ -135,60 +121,9 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* Projects grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
-            <a
-              key={project.id}
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`project-card group block rounded-xl border ${tagColors[project.color]} bg-black/30 backdrop-blur-sm p-6 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              {/* Status badge */}
-              <div className="flex items-center justify-between mb-4">
-                <span className={`text-xs px-3 py-1 rounded-full border ${statusColors[project.status]}`}>
-                  {project.status}
-                </span>
-                <svg className="w-4 h-4 text-gray-600 group-hover:text-violet-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </div>
-
-              {/* Title */}
-              <h3 className="font-orbitron text-lg text-white mb-3 group-hover:text-violet-300 transition-colors">
-                {project.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-gray-500 text-sm mb-4 line-clamp-3">
-                {project.description}
-              </p>
-
-              {/* Highlights */}
-              <ul className="text-gray-600 text-xs space-y-1 mb-4">
-                {project.highlights.slice(0, 2).map((highlight, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-violet-500 mt-1">•</span>
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-gray-800">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-2 py-1 rounded bg-white/5 text-gray-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </a>
-          ))}
+        {/* 3D Projects Gallery */}
+        <div className={`transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <StellarProjectGallery projects={projects} />
         </div>
 
         {/* GitHub CTA */}

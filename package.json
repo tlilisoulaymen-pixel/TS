@@ -10,6 +10,9 @@
     "format": "bunx biome format --write"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/three": "^0.184.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gsap": "^3.15.0",
@@ -20,7 +23,8 @@
     "react-grab": "latest",
     "same-runtime": "^0.0.1",
     "tailwind-merge": "^3.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
