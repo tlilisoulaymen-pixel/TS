@@ -50,7 +50,9 @@ CV INFORMATION:
 # Called by the frontend when the chat sidebar opens to warm up the Render
 # instance before the user sends their first message, eliminating cold-start hangs.
 @app.get("/")
+@app.head("/")
 @app.get("/health")
+@app.head("/health")
 async def health_check():
     return {"status": "ok"}
 
