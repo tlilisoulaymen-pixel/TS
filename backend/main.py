@@ -68,9 +68,9 @@ async def chat_endpoint(req: ChatRequest):
         }
 
     try:
-        # gemini-2.0-flash: low-latency, no thinking overhead — ideal for chat
+        # Reverted back to gemini-2.5-flash because the API key quota for 2.0-flash is exhausted
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.5-flash",
             contents=req.message,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
