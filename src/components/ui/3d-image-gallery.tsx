@@ -56,14 +56,16 @@ function StarfieldBackground() {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mountNode = mountRef.current;
+    if (!mountNode) return;
+    
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x050506, 1);
-    mountRef.current.appendChild(renderer.domElement);
+    mountNode.appendChild(renderer.domElement);
 
     const geo = new THREE.BufferGeometry();
     const count = 8000;
@@ -98,8 +100,8 @@ function StarfieldBackground() {
     return () => {
       window.removeEventListener("resize", onResize);
       cancelAnimationFrame(id);
-      if (mountRef.current?.contains(renderer.domElement)) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (mountNode?.contains(renderer.domElement)) {
+        mountNode.removeChild(renderer.domElement);
       }
       renderer.dispose();
       geo.dispose();
