@@ -345,8 +345,8 @@ export function CinematicFooter() {
             <div className="flex flex-col md:flex-row items-center gap-4 order-2 md:order-1">
               <Link href="/" aria-label="Go to profile top" className="group">
                 <img 
-                  src="/ts-logo.png" 
-                  alt="TS Logo" 
+                  src="/hovercode.png" 
+                  alt="Hovercode QR" 
                   className="h-28 w-28 md:h-32 md:w-32 object-contain bg-white p-2 rounded-xl group-hover:scale-105 transition-transform shadow-lg shadow-violet-500/20" 
                 />
               </Link>
