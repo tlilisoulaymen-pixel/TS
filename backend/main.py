@@ -14,7 +14,7 @@ app = FastAPI()
 # Allow CORS for Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,8 +23,7 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     message: str
 
-# Load Knowledge Base
-# Resolve path relative to this file so it works on any server
+# Load Knowledge Base — path is relative to this file so it works on any server
 _ROOT = Path(__file__).parent.parent
 try:
     with open(_ROOT / "public" / "KNOWLEDGEBASE.md", "r", encoding="utf-8") as f:
@@ -38,29 +37,44 @@ client = None
 if api_key:
     client = genai.Client(api_key=api_key)
 
-SYSTEM_PROMPT = f"""
-You are TS-AI, the personal AI assistant for Tlili Soulaymen. 
-Answer questions accurately based on this CV information. Be concise, professional, and friendly. 
+SYSTEM_PROMPT = f"""You are TS-AI, the personal AI assistant for Tlili Soulaymen.
+Answer questions accurately based on the CV information below.
+Be concise (2-4 sentences max), professional, and friendly.
 If asked something not in the CV, say you don't know but suggest contacting him directly.
 
 CV INFORMATION:
 {knowledge_base}
 """
 
+# ── Health / wake-up endpoint ────────────────────────────────────────────────
+# Called by the frontend when the chat sidebar opens to warm up the Render
+# instance before the user sends their first message, eliminating cold-start hangs.
+@app.get("/")
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
+# ── Chat endpoint ────────────────────────────────────────────────────────────
 @app.post("/chat")
 async def chat_endpoint(req: ChatRequest):
     if not client:
-        return {"response": "Error: GEMINI_API_KEY is not set in the backend environment. Please set it to use the AI."}
-    
+        return {
+            "response": (
+                "Error: GEMINI_API_KEY is not set in the backend environment. "
+                "Please add it to your Render environment variables."
+            )
+        }
+
     try:
-        # Using Gemini 3 Flash or Gemini 2.5 Flash as standard
+        # gemini-2.0-flash: low-latency, no thinking overhead — ideal for chat
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model="gemini-2.0-flash",
             contents=req.message,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 temperature=0.3,
-            )
+                max_output_tokens=512,   # cap to prevent slow runaway responses
+            ),
         )
         return {"response": response.text}
     except Exception as e:
@@ -70,4 +84,3 @@ async def chat_endpoint(req: ChatRequest):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

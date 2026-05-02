@@ -12,33 +12,36 @@ interface AIChatSidebarProps {
   onClose: () => void;
 }
 
+const API_URL = "https://ts-f3lk.onrender.com";
+const REQUEST_TIMEOUT_MS = 25000; // 25 seconds max wait
+
 export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   const [messages, setMessages] = useState<Message[]>([
     { role: "ai", content: "Hi! I'm TS-AI, Soulaymen's personal assistant. What would you like to know about him?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [knowledgeBase, setKnowledgeBase] = useState("");
+  const [isWakingUp, setIsWakingUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // AI Session ref
-  const aiSessionRef = useRef<unknown>(null);
-
-  // Fetch KNOWLEDGEBASE.md on mount
-  useEffect(() => {
-    fetch("/KNOWLEDGEBASE.md")
-      .then((res) => res.text())
-      .then((text) => setKnowledgeBase(text))
-      .catch((err) => console.error("Failed to load knowledgebase", err));
-  }, []);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fallback if they didn't run the backend yet
+  // Warm-up ping: fires as soon as the sidebar opens so Render wakes up
+  // before the user finishes typing their first message.
+  useEffect(() => {
+    if (!isOpen) return;
+    setIsWakingUp(true);
+    const controller = new AbortController();
+    fetch(`${API_URL}/health`, { signal: controller.signal })
+      .catch(() => {/* silently ignore — just a warm-up */ })
+      .finally(() => setIsWakingUp(false));
+    return () => controller.abort();
+  }, [isOpen]);
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -49,25 +52,34 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
     setIsLoading(true);
     setErrorMsg("");
 
+    // AbortController gives us a hard timeout so the UI never hangs forever
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
     try {
-      // Hardcode production URL to eliminate any port 8000 fallback errors
-      const apiUrl = "https://ts-f3lk.onrender.com";
-      
-      const res = await fetch(`${apiUrl}/chat`, {
+      const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
+
       if (!res.ok) {
-        throw new Error(`Backend server is not reachable at ${apiUrl}.`);
+        throw new Error(`Server responded with ${res.status}. The backend may be starting up — try again in a few seconds.`);
       }
 
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
     } catch (error: unknown) {
-      console.error("AI Prompt Error:", error);
-      setErrorMsg("Error: " + (error instanceof Error ? error.message : String(error)) + " Make sure your Render backend is live and configured.");
+      clearTimeout(timeoutId);
+      const isTimeout = error instanceof DOMException && error.name === "AbortError";
+      setErrorMsg(
+        isTimeout
+          ? "The backend is still warming up (Render cold start). Please wait a few seconds and try again."
+          : "Error: " + (error instanceof Error ? error.message : String(error))
+      );
     } finally {
       setIsLoading(false);
     }
@@ -77,17 +89,16 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
     <>
       {/* Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <div 
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-[#0a0a0c]/90 backdrop-blur-xl border-l border-violet-500/30 shadow-2xl shadow-violet-900/20 z-50 transform transition-transform duration-500 ease-in-out flex flex-col ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+      <div
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-[#0a0a0c]/90 backdrop-blur-xl border-l border-violet-500/30 shadow-2xl shadow-violet-900/20 z-50 transform transition-transform duration-500 ease-in-out flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-violet-500/20 bg-black/20">
@@ -97,10 +108,17 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             </div>
             <div>
               <h3 className="font-orbitron text-white text-sm tracking-wider">TS-AI Assistant</h3>
-              <p className="text-[10px] text-violet-400/80 tracking-widest uppercase">Powered by Gemini AI</p>
+              <p className="text-[10px] text-violet-400/80 tracking-widest uppercase flex items-center gap-1">
+                Powered by Gemini AI
+                {isWakingUp && (
+                  <span className="text-yellow-400/70 normal-case font-sans tracking-normal">
+                    · warming up…
+                  </span>
+                )}
+              </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors p-1"
           >
@@ -117,31 +135,31 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
               {errorMsg}
             </div>
           )}
-          
+
           {messages.map((msg, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div 
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
-                  msg.role === "user" 
-                    ? "bg-violet-600 text-white rounded-tr-sm" 
+              <div
+                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === "user"
+                    ? "bg-violet-600 text-white rounded-tr-sm"
                     : msg.role === "system"
                       ? "bg-red-500/20 text-red-200 border border-red-500/30 mx-auto"
                       : "bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm"
-                }`}
+                  }`}
               >
                 {msg.content}
               </div>
             </div>
           ))}
+
           {isLoading && (
             <div className="flex justify-start">
               <div className="max-w-[85%] rounded-2xl px-4 py-3 text-sm bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm flex gap-1 items-center">
                 <span className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" />
-                <span className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '0.2s' }} />
-                <span className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '0.4s' }} />
+                <span className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: "0.2s" }} />
+                <span className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: "0.4s" }} />
               </div>
             </div>
           )}
