@@ -65,8 +65,8 @@ PROFILE WEBSITE: https://ts-three-gamma.vercel.app/
 ║  Handle:      @tlilisoulaymen-pixel                            ║
 ║  Bio:         Advanced Technologies Student — AI, Quantitative             ║
 ║               Finance & Blockchain.                            ║
-║  Repos:       7 public                                         ║
-║  Top langs:   TypeScript, HTML                                 ║
+║  Repos:       currentlt 7 are public                                         ║
+║                                 
 ╚════════════════════════════════════════════════════════════════╝
 ```
 
