@@ -45,6 +45,7 @@
 </div>
 
 ---
+PROFILE WEBSITE: https://ts-three-gamma.vercel.app/
 
 ### About Me
 
@@ -62,7 +63,7 @@
 ╠════════════════════════════════════════════════════════════════╣
 ║  Name:        TLILI SOULAYMEN                                  ║
 ║  Handle:      @tlilisoulaymen-pixel                            ║
-║  Bio:         Software Engineer — AI, Quantitative             ║
+║  Bio:         Advanced Technologies Student — AI, Quantitative             ║
 ║               Finance & Blockchain.                            ║
 ║  Repos:       7 public                                         ║
 ║  Top langs:   TypeScript, HTML                                 ║
@@ -79,3 +80,4 @@
 | **flashloan** | Smart Contracts / TS | Web3 DeFi flash loan execution engine |
 | **ecopatch** | HTML / JS | Sustainability patching toolkit |
 | **CTA / CTAA** | TypeScript | Algorithmic trading execution scripts |
+check my repo for more
